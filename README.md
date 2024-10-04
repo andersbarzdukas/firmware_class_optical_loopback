@@ -1,6 +1,8 @@
 # firmware_class_optical_loopback
 Tutorials with goal of implementing an optical loopback.
 
+To get started with this project please follow the steps below.
+
 ```
 git clone git@github.com:andersbarzdukas/firmware_class_optical_loopback.git
 cd firmware_class_optical_loopback
