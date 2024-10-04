@@ -36,8 +36,8 @@ entity clock_controller is
   Port ( 
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
-    clk_buf : out std_logic
-    --clk_1hz : out std_logic;
+    clk_buf : out std_logic;
+    clk_1hz : out std_logic
     --Optional:
     --clk_factor : in std_logic;
     --clk_variable : out std_logic
@@ -49,6 +49,9 @@ architecture Behavioral of clock_controller is
 --Signals used to create buffered clocks
 signal clk_unbuf : std_logic :='U';
 signal clk_buf_int : std_logic := 'U';
+signal clk_1hz_int : std_logic := '0';
+
+signal count : unsigned(26 downto 0) := (others => '0');
 
 begin
 
@@ -58,14 +61,20 @@ u_bufg: bufg PORT map(i => clk_unbuf, o => clk_buf_int);
 
 --Need intermediate signal for other processes 
 clk_buf <= clk_buf_int;
+clk_1hz <= clk_1hz_int;
+
 
 --Counter to make a 1Hz clock
 clock_1hz : process(clk_buf_int) 
-variable counter : unsigned(26 downto 0) := to_unsigned(125_000_000,27);
+variable count_max : unsigned(26 downto 0) := to_unsigned(125_000_000,27);
 begin
   if(rising_edge(clk_buf_int)) then
-    --FILL IN CODE HERE
-    
+    if( count < count_max) then
+        count <= count + 1;
+    else 
+        count <= (others => '0');
+        clk_1hz_int <= not clk_1hz_int;
+    end if;
   end if;
 end process;
 

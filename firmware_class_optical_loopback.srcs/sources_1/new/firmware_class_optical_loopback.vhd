@@ -47,8 +47,8 @@ component clock_controller is
 port(
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
-    clk_buf : out std_logic --;
-    --clk_1hz : out std_logic;
+    clk_buf : out std_logic;
+    clk_1hz : out std_logic --;
     --Optional:
     --clk_factor : in std_logic;
     --clk_variable : out std_logic
@@ -63,10 +63,22 @@ port(
     led_out : out std_logic_vector(7 downto 0)
 );
 end component; 
+
+
+component vio_0 is
+port(
+    clk : in std_logic;
+    probe_out0 : out std_logic
+);
+end component;
+
 ---------------------------------------------------------------------------------------
 
 --Put any signals, variables, or constants needed for the firmware below: 
 signal clk_buf : std_logic := 'U';
+signal clk_1hz : std_logic := 'U';
+
+signal vio_reset : std_logic := 'U';
 
 begin
 
@@ -76,19 +88,24 @@ u_clock_controller : clock_controller
 port map(
     clk_in_p => clk_in_p,
     clk_in_n => clk_in_n,
-    clk_buf => clk_buf
+    clk_buf => clk_buf,
+    clk_1hz => clk_1hz
 );
 
 --Instatiation of LED blinker file
 u_led_blinker : led_blinker
 port map(
-    clk_led => clk_buf,
+    clk_led => clk_1hz,
     led_out => led_out
 );
 
 
 --WEEK 1: ADD VIO, ILA, AND FIFO BELOW
-
+u_vio_0 : vio_0
+port map(
+    clk => clk_buf,
+    probe_out0 => vio_reset
+);
 
 
 end Behavioral;
