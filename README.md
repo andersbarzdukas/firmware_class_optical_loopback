@@ -1,8 +1,21 @@
 # firmware_class_optical_loopback
-Tutorials with goal of implementing an optical loopback
+Tutorials with goal of implementing an optical loopback.
 
+```
+git clone git@github.com:andersbarzdukas/fsm_firmware_project.git
+cd fsm_firmware_project
+git branch <YOUR NAME>_development
+git push -u origin <YOUR NAME>_development
+git checkout <YOUR NAME>_development
+```
+if the checkout option above does not work, please try the following below.
 
-Plan for this project:
+```
+git clone https://github.com/andersbarzdukas/fsm_firmware_project.git
+```
+
+Rought outline for this project:
+
 ## Week 1: 
 - In class: Add an ILA, VIO, and FIFO. Then look at simulation and generate bitstream
 - Out of class: Add one of the following modifications: Blink the LEDs counting up in binary, add the ability to change the LED blinking frequency with the ILA, or add FIFOs that are read with slower or faster clocks and look at the behavior in the ILA
