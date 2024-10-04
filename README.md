@@ -12,8 +12,8 @@ Plan for this project:
 - Out of class: Nothing
 
 ## Week 3: 
-In class: Add example design for 8b/10b communications at 1.6Gbps into the firmware project and look at simulation
-Out of class: Generate the bitstream (depending on where we get to in class)
+- In class: Add example design for 8b/10b communications at 1.6Gbps into the firmware project and look at simulation
+- Out of class: Generate the bitstream (depending on where we get to in class)
 
 ## Week 4:
 - In class: Connect signals to the ILA to monitor the 8b/10b link
