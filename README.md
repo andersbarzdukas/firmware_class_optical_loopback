@@ -2,8 +2,8 @@
 Tutorials with goal of implementing an optical loopback.
 
 ```
-git clone git@github.com:andersbarzdukas/fsm_firmware_project.git
-cd fsm_firmware_project
+git clone git@github.com:andersbarzdukas/firmware_class_optical_loopback.git
+cd firmware_class_optical_loopback
 git branch <YOUR NAME>_development
 git push -u origin <YOUR NAME>_development
 git checkout <YOUR NAME>_development
