@@ -33,14 +33,15 @@ library UNISIM;
 use UNISIM.VComponents.all;
 
 entity clock_controller is
+  Generic(speed_factor_width : integer := 3);
   Port ( 
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
     clk_buf : out std_logic;
-    clk_1hz : out std_logic
+    clk_1hz : out std_logic;
     --Optional:
-    --clk_factor : in std_logic;
-    --clk_variable : out std_logic
+    clk_factor : in unsigned(speed_factor_width downto 0);
+    clk_variable : out std_logic
   );
 end clock_controller;
 
@@ -51,7 +52,17 @@ signal clk_unbuf : std_logic :='U';
 signal clk_buf_int : std_logic := 'U';
 signal clk_1hz_int : std_logic := '0';
 
-signal count : unsigned(26 downto 0) := (others => '0');
+signal count_max : unsigned(26 downto 0) := to_unsigned(62_500_000,27);
+signal variable_count_max : unsigned(26 downto 0) := (others => '0');
+
+component slow_clock 
+generic( count_max_width : integer);
+port(
+clk_in : in std_logic;
+count_max : in unsigned(26 downto 0);
+clk_out_slow : out std_logic
+);
+end component;
 
 begin
 
@@ -63,20 +74,23 @@ u_bufg: bufg PORT map(i => clk_unbuf, o => clk_buf_int);
 clk_buf <= clk_buf_int;
 clk_1hz <= clk_1hz_int;
 
+u_slow_clk : slow_clock
+generic map( count_max_width => 26)
+port map(
+clk_in => clk_buf_int,
+count_max => count_max,
+clk_out_slow => clk_1hz_int
+);
 
---Counter to make a 1Hz clock
-clock_1hz : process(clk_buf_int) 
-variable count_max : unsigned(26 downto 0) := to_unsigned(125_000_000,27);
-begin
-  if(rising_edge(clk_buf_int)) then
-    if( count < count_max) then
-        count <= count + 1;
-    else 
-        count <= (others => '0');
-        clk_1hz_int <= not clk_1hz_int;
-    end if;
-  end if;
-end process;
+--Optional slow clock that uses a vio input to set frequency
+variable_count_max <= to_unsigned(5_000_000,26-speed_factor_width)*clk_factor; 
 
+u_variable_slow_clk : slow_clock
+generic map(count_max_width => 26)
+port map(
+clk_in => clk_buf_int,
+count_max => variable_count_max,
+clk_out_slow => clk_variable
+);
 
 end Behavioral;
