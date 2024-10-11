@@ -70,6 +70,13 @@ port(
     probe_out0 : out std_logic
 );
 end component; 
+
+component ila_0 is
+port(
+    clk : in std_logic;
+    probe0 : in std_logic
+);
+end component; 
 ---------------------------------------------------------------------------------------
 
 --Put any signals, variables, or constants needed for the firmware below: 
@@ -100,6 +107,12 @@ u_vio_0 : vio_0
 port map(
     clk => clk_buf,
     probe_out0 => vio_out
+);
+
+u_ila_0 : ila_0
+port map(
+    clk => clk_buf,
+    probe0 => clk_1hz
 );
 
 
