@@ -43,7 +43,7 @@ architecture Behavioral of led_blinker is
 begin
 
 --Fill in the code you want to light up the LEDs
-led_out(7 downto 0) <= "11111111";
+led_out(7 downto 0) <= (others => clk_led);
 
 
 end Behavioral;
