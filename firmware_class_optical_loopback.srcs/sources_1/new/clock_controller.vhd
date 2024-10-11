@@ -37,7 +37,8 @@ entity clock_controller is
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
     clk_buf : out std_logic;
-    clk_1hz : out std_logic
+    clk_1hz : out std_logic;
+    count_out : out std_logic_vector(7 downto 0)
     --Optional:
     --clk_factor : in std_logic;
     --clk_variable : out std_logic
@@ -61,6 +62,7 @@ u_bufg: bufg PORT map(i => clk_unbuf, o => clk_buf_int);
 --Need intermediate signal for other processes 
 clk_buf <= clk_buf_int;
 clk_1hz <= clk_1hz_int;
+count_out <= std_logic_vector(counter(7 downto 0));
 
 --Counter to make a 1Hz clock
 clock_1hz : process(clk_buf_int) 

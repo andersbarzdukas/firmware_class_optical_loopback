@@ -48,7 +48,8 @@ port(
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
     clk_buf : out std_logic;
-    clk_1hz : out std_logic
+    clk_1hz : out std_logic;
+    count_out : out std_logic_vector(7 downto 0)
     --Optional:
     --clk_factor : in std_logic;
     --clk_variable : out std_logic
@@ -74,15 +75,30 @@ end component;
 component ila_0 is
 port(
     clk : in std_logic;
-    probe0 : in std_logic
+    probe0 : in std_logic;
+    probe1 : in std_logic;
+    probe2 : in std_logic;
+    probe3 : in std_logic_vector(7 downto 0);
+    probe4 : in std_logic_vector(7 downto 0);
+    probe5 : in std_logic_vector(7 downto 0)
 );
 end component; 
+
+component fifo_controller is
+port(
+    clk : in std_logic;
+    data_in : in std_logic_vector(7 downto 0);
+    data_out : out std_logic_vector(7 downto 0)
+);
+end component;
 ---------------------------------------------------------------------------------------
 
 --Put any signals, variables, or constants needed for the firmware below: 
 signal clk_buf : std_logic := 'U';
 signal clk_1hz : std_logic := 'U';
 signal vio_out : std_logic := 'U';
+signal count_out_int : std_logic_vector(7 downto 0) := (others => 'U');
+signal data_out_probe : std_logic_vector(7 downto 0) := (others => 'U');
 
 begin
 
@@ -93,7 +109,8 @@ port map(
     clk_in_p => clk_in_p,
     clk_in_n => clk_in_n,
     clk_buf => clk_buf,
-    clk_1hz => clk_1hz
+    clk_1hz => clk_1hz,
+    count_out => count_out_int
 );
 
 --Instatiation of LED blinker file
@@ -112,7 +129,19 @@ port map(
 u_ila_0 : ila_0
 port map(
     clk => clk_buf,
-    probe0 => clk_1hz
+    probe0 => clk_1hz,
+    probe1 => '0',
+    probe2 => '0',
+    probe3 => count_out_int,
+    probe4 => data_out_probe,
+    probe5 => (others => '0')
+);
+
+u_fifo_controller : fifo_controller
+port map(
+    clk => clk_buf,
+    data_in => count_out_int,
+    data_out => data_out_probe
 );
 
 
