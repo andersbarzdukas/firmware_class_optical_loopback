@@ -38,10 +38,13 @@ entity clock_controller is
     clk_in_p : in std_logic;
     clk_in_n : in std_logic;
     clk_buf : out std_logic;
+    clk_buf_double : out std_logic;
+    clk_buf_half : out std_logic;
     clk_1hz : out std_logic;
     --Optional:
     clk_factor : in unsigned(speed_factor_width downto 0);
-    clk_variable : out std_logic
+    clk_variable : out std_logic;
+    count_out : out std_logic_vector(7 downto 0)
   );
 end clock_controller;
 
@@ -60,7 +63,16 @@ generic( count_max_width : integer);
 port(
 clk_in : in std_logic;
 count_max : in unsigned(26 downto 0);
-clk_out_slow : out std_logic
+clk_out_slow : out std_logic;
+count_out : out std_Logic_vector(7 downto 0)
+);
+end component;
+
+component clk_wiz_0
+port(
+clk_125Mhz : in std_logic;
+clk_62p5Mhz : out std_logic;
+clk_250Mhz : out std_logic
 );
 end component;
 
@@ -74,12 +86,20 @@ u_bufg: bufg PORT map(i => clk_unbuf, o => clk_buf_int);
 clk_buf <= clk_buf_int;
 clk_1hz <= clk_1hz_int;
 
+u_clk_wiz_0 : clk_wiz_0
+port map(
+clk_125Mhz => clk_unbuf,
+clk_62p5Mhz => clk_buf_half,
+clk_250Mhz => clk_buf_double 
+);
+
 u_slow_clk : slow_clock
 generic map( count_max_width => 26)
 port map(
 clk_in => clk_buf_int,
 count_max => count_max,
-clk_out_slow => clk_1hz_int
+clk_out_slow => clk_1hz_int,
+count_out => count_out
 );
 
 --Optional slow clock that uses a vio input to set frequency
@@ -90,7 +110,8 @@ generic map(count_max_width => 26)
 port map(
 clk_in => clk_buf_int,
 count_max => variable_count_max,
-clk_out_slow => clk_variable
+clk_out_slow => clk_variable,
+count_out => open
 );
 
 end Behavioral;

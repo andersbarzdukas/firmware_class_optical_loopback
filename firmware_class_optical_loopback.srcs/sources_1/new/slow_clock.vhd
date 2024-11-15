@@ -35,7 +35,8 @@ entity slow_clock is
     Generic( count_max_width : integer := 26);
     Port ( clk_in : in STD_LOGIC;
            count_max : in unsigned(count_max_width downto 0); --Count max is based off of the fact that clk_in is expecting a 125 MHz clock
-           clk_out_slow : out STD_LOGIC);
+           clk_out_slow : out STD_LOGIC;
+           count_out : out STD_LOGIC_VECTOR(7 downto 0));
 end slow_clock;
 
 architecture Behavioral of slow_clock is
@@ -57,6 +58,8 @@ if(rising_edge(clk_in)) then
         clk_out_slow_int <= not clk_out_slow_int;
     end if;
 end if;
+
+count_out <= std_logic_vector(count(7 downto 0));
 
 end process;
 
